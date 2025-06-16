@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Tracking System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="login-container" id="loginContainer">
+        <h1>Employee Tracking System</h1>
+        <div class="login-form">
+            <input type="text" id="username" placeholder="Username" required>
+            <select id="userRole">
+                <option value="employee">Employee</option>
+                <option value="manager">Manager</option>
+            </select>
+            <button class="neon-btn" onclick="handleLogin()">Login</button>
+        </div>
+    </div>
+
+    <div class="dashboard-container" id="dashboard" style="display: none;">
+        <nav class="navbar">
+            <h2>Welcome, <span id="userName"></span></h2>
+            <button class="neon-btn" onclick="handleLogout()">Logout</button>
+        </nav>
+
+        <div class="dashboard-content">
+            <div class="break-tracking" id="breakTracking">
+                <h3>Break Tracking</h3>
+                <div class="break-buttons">
+                    <button class="neon-btn" onclick="toggleBreak('first')">1st Break</button>
+                    <button class="neon-btn" onclick="toggleBreak('second')">2nd Break</button>
+                    <button class="neon-btn" onclick="toggleBreak('bio')">Bio Break</button>
+                </div>
+                <div class="break-timers">
+                    <div class="timer">1st Break: <span id="firstBreak">00:00</span></div>
+                    <div class="timer">2nd Break: <span id="secondBreak">00:00</span></div>
+                    <div class="timer">Bio Break: <span id="bioBreak">00:00</span></div>
+                    <div class="timer total">Total Break: <span id="totalBreak">00:00</span></div>
+                </div>
+            </div>
+
+            <div class="sales-tracking" id="salesTracking">
+                <h3>Sales Tracking</h3>
+                <div class="sales-inputs">
+                    <input type="number" id="fiberSales" placeholder="Fiber Sales">
+                    <input type="number" id="mobileSales" placeholder="Mobile Sales">
+                    <input type="number" id="videoSales" placeholder="Video Sales">
+                    <button class="neon-btn" onclick="calculateTotalSales()">Calculate Total</button>
+                </div>
+                <div class="sales-total">
+                    <div class="total-sales">Total Sales: <span id="totalSales">0</span></div>
+                </div>
+            </div>
+
+            <div class="summary-box" id="summaryBox">
+                <h3>Summary</h3>
+                <div class="summary-content">
+                    <div class="summary-item">Login Hours: <span id="loginHours">00:00:00</span></div>
+                    <div class="summary-item">Total Break Time: <span id="summaryBreak">00:00</span></div>
+                    <div class="summary-item">Total Sales: <span id="summarySales">0</span></div>
+                    <div class="summary-item manager-summary" style="display: none;">
+                        <h4>Manager Summary</h4>
+                        <div class="manager-details">
+                            <div class="manager-item">HR Time: <span id="summaryHr">00:00</span></div>
+                            <div class="manager-item">Supervisor Time: <span id="summarySupervisor">00:00</span></div>
+                            <div class="manager-item">Audit Time: <span id="summaryAudit">00:00</span></div>
+                        </div>
+                    </div>
+                    <button class="neon-btn" onclick="sendEmail()">Send Summary to Email</button>
+                </div>
+            </div>
+
+            <div class="manager-dashboard" id="managerDashboard" style="display: none;">
+                <h3>Manager Dashboard</h3>
+                <div class="manager-inputs">
+                    <div class="time-slot">
+                        <h4>HR Slot</h4>
+                        <div class="slot-controls">
+                            <button class="neon-btn" onclick="toggleSlot('hr')">Start HR</button>
+                            <span id="hrDuration">00:00</span>
+                        </div>
+                    </div>
+                    <div class="time-slot">
+                        <h4>Supervisor Slot</h4>
+                        <div class="slot-controls">
+                            <button class="neon-btn" onclick="toggleSlot('supervisor')">Start Supervisor</button>
+                            <span id="supervisorDuration">00:00</span>
+                        </div>
+                    </div>
+                    <div class="time-slot">
+                        <h4>Audit Slot</h4>
+                        <div class="slot-controls">
+                            <button class="neon-btn" onclick="toggleSlot('audit')">Start Audit</button>
+                            <span id="auditDuration">00:00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chatbot-container" id="techBot">
+                <h3>Tech Support Bot</h3>
+                <div class="chatbot">
+                    <div class="chat-messages" id="techMessages"></div>
+                    <input type="text" id="techInput" placeholder="Type your tech issue...">
+                    <button class="neon-btn" onclick="handleTechIssue()">Send</button>
+                </div>
+            </div>
+
+            <div class="chatbot-container" id="customerBot">
+                <h3>Customer Handling Bot</h3>
+                <div class="chatbot">
+                    <div class="chat-messages" id="customerMessages"></div>
+                    <input type="text" id="customerInput" placeholder="Type customer situation...">
+                    <button class="neon-btn" onclick="handleCustomerIssue()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

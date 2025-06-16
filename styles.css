@@ -1,0 +1,242 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #000;
+    color: #fff;
+    min-height: 100vh;
+}
+
+/* Neon Button Styles */
+.neon-btn {
+    background: linear-gradient(45deg, #00ff00, #00ffff);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.neon-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+}
+
+.neon-btn:active {
+    transform: scale(0.95);
+}
+
+/* Container Styles */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    gap: 20px;
+}
+
+.login-form {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 255, 0, 0.2);
+}
+
+.dashboard-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Dashboard Layout */
+.dashboard-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Break Tracking */
+.break-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.timer {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+    margin: 5px 0;
+}
+
+.total {
+    color: #00ff00;
+    font-weight: bold;
+}
+
+/* Sales Tracking */
+.sales-inputs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.sales-inputs input {
+    padding: 8px;
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+}
+
+/* Summary Box */
+.summary-content {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #00ff00;
+}
+
+.summary-item {
+    margin: 10px 0;
+}
+
+/* Manager Dashboard */
+.manager-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.time-slot {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #00ff00;
+}
+
+.slot-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.slot-controls span {
+    font-size: 1.2em;
+    color: #00ff00;
+    font-weight: bold;
+    text-align: center;
+}
+
+.time-slot input {
+    padding: 8px;
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+}
+
+/* Manager Summary in Summary Box */
+.manager-summary {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    border: 1px solid #00ff00;
+}
+
+.manager-summary h4 {
+    color: #00ff00;
+    margin-bottom: 10px;
+}
+
+.manager-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.manager-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    background: rgba(0, 255, 0, 0.1);
+    border-radius: 5px;
+}
+
+.manager-item span {
+    color: #00ff00;
+    font-weight: bold;
+}
+
+/* Chatbot Styles */
+.chatbot-container {
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid #00ff00;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.chat-messages {
+    height: 200px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+}
+
+.chatbot input {
+    padding: 8px;
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.8);
+    border-bottom: 1px solid #00ff00;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .break-buttons {
+        flex-direction: column;
+    }
+    
+    .time-slot {
+        margin-bottom: 20px;
+    }
+    
+    .manager-details {
+        flex-direction: column;
+    }
+}
