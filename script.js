@@ -24,6 +24,62 @@ let slotDurations = {
     audit: 0
 };
 
+// Sales data array
+let sales = [
+    { type: 'Fiber', count: 0 },
+    { type: 'Mobile', count: 0 },
+    { type: 'Video', count: 0 }
+];
+
+// --- Remove OpenAI API integration ---
+// --- Restore simple local chatbot logic ---
+
+function handleTechIssue() {
+    const inputElem = document.getElementById('techInput');
+    const input = inputElem.value;
+    const messages = document.getElementById('techMessages');
+    if (!input) return;
+    messages.innerHTML += `<div class="user-message">${input}</div>`;
+    let response = "I'm here to help with tech issues!";
+    if (input.toLowerCase().includes('internet')) {
+        response = "Check your modem lights and try restarting your router. If issues persist, contact tech support.";
+    } else if (input.toLowerCase().includes('video')) {
+        response = "Try restarting your set-top box and check if you have the latest firmware.";
+    } else if (input.toLowerCase().includes('cable box')) {
+        response = "Check if the cable box is properly connected and powered. Try a power cycle if needed.";
+    } else if (input.toLowerCase().includes('modem')) {
+        response = "Check power supply and connections. Try resetting the modem if needed.";
+    } else if (input.toLowerCase().includes('remote')) {
+        response = "Ensure the remote is properly paired. Check battery levels and alignment.";
+    }
+    messages.innerHTML += `<div class="bot-message">${response}</div>`;
+    inputElem.value = '';
+    messages.scrollTop = messages.scrollHeight;
+}
+
+function handleCustomerIssue() {
+    const inputElem = document.getElementById('customerInput');
+    const input = inputElem.value;
+    const messages = document.getElementById('customerMessages');
+    if (!input) return;
+    messages.innerHTML += `<div class="user-message">${input}</div>`;
+    let response = "I'm here to help with customer handling!";
+    if (input.toLowerCase().includes('irate') || input.toLowerCase().includes('upset')) {
+        response = "Stay calm, listen actively, and apologize sincerely. Offer solutions and escalate if needed.";
+    } else if (input.toLowerCase().includes('billing')) {
+        response = "Review the bill carefully, explain charges clearly, and offer payment options.";
+    } else if (input.toLowerCase().includes('service')) {
+        response = "Acknowledge the issue, provide status updates, and set expectations.";
+    } else if (input.toLowerCase().includes('happy')) {
+        response = "Great job! Continue providing excellent service and maintain a positive attitude.";
+    } else if (input.toLowerCase().includes('unhappy')) {
+        response = "Listen actively, empathize, and address concerns promptly.";
+    }
+    messages.innerHTML += `<div class="bot-message">${response}</div>`;
+    inputElem.value = '';
+    messages.scrollTop = messages.scrollHeight;
+}
+
 // Initialize session on page load
 document.addEventListener('DOMContentLoaded', () => {
     const savedSession = localStorage.getItem('session');
@@ -181,11 +237,6 @@ function handleLogout() {
     // Reset break display
     updateBreakDisplay();
     
-    // Reset sales inputs
-    document.getElementById('fiberSales').value = '';
-    document.getElementById('mobileSales').value = '';
-    document.getElementById('videoSales').value = '';
-    
     // Reset manager dashboard
     document.getElementById('hrStart').value = '';
     document.getElementById('hrEnd').value = '';
@@ -231,28 +282,78 @@ function updateBreakDisplay() {
     document.getElementById('firstBreak').textContent = formatTime(breakDurations.first);
     document.getElementById('secondBreak').textContent = formatTime(breakDurations.second);
     document.getElementById('bioBreak').textContent = formatTime(breakDurations.bio);
-    
-    const totalSeconds = breakDurations.first + breakDurations.second + breakDurations.bio;
-    document.getElementById('totalBreak').textContent = formatTime(totalSeconds);
-    document.getElementById('summaryBreak').textContent = formatTime(totalSeconds);
+
+    // Calculate total break time
+    const totalBreakSeconds = breakDurations.first + breakDurations.second + breakDurations.bio;
+    document.getElementById('totalBreak').textContent = formatTime(totalBreakSeconds);
+    document.getElementById('summaryBreak').textContent = formatTime(totalBreakSeconds);
 }
 
 // Sales Tracking Functions
-function calculateTotalSales() {
-    const fiber = parseInt(document.getElementById('fiberSales').value) || 0;
-    const mobile = parseInt(document.getElementById('mobileSales').value) || 0;
-    const video = parseInt(document.getElementById('videoSales').value) || 0;
-    
-    const total = fiber + mobile + video;
+function addSale() {
+    const fiberCount = parseInt(document.getElementById('Fiber').value) || 0;
+    const mobileCount = parseInt(document.getElementById('Mobile').value) || 0;
+    const videoCount = parseInt(document.getElementById('Video').value) || 0;
+
+    if (fiberCount < 0 || mobileCount < 0 || videoCount < 0) {
+        alert('Please enter valid (non-negative) numbers for sales.');
+        return;
+    }
+
+    // Update sales array
+    sales.find(s => s.type === 'Fiber').count += fiberCount;
+    sales.find(s => s.type === 'Mobile').count += mobileCount;
+    sales.find(s => s.type === 'Video').count += videoCount;
+
+    updateSalesList();
+    updateTotalSales();
+    localStorage.setItem('sales', JSON.stringify(sales));
+
+    // Clear inputs
+    document.getElementById('Fiber').value = '';
+    document.getElementById('Mobile').value = '';
+    document.getElementById('Video').value = '';
+}
+
+function updateSalesList() {
+    const salesList = document.getElementById('salesItems');
+    salesList.innerHTML = '';
+    sales.forEach(sale => {
+        if (sale.count > 0) {
+            const li = document.createElement('li');
+            li.innerHTML = `<span>${sale.type}</span><span>Count: ${sale.count}</span>`;
+            salesList.appendChild(li);
+        }
+    });
+}
+
+function updateTotalSales() {
+    const total = sales.reduce((sum, sale) => sum + sale.count, 0);
     document.getElementById('totalSales').textContent = total;
     document.getElementById('summarySales').textContent = total;
-    
-    // Save to localStorage
-    localStorage.setItem('salesData', JSON.stringify({
-        fiber, mobile, video, total,
-        timestamp: new Date().toISOString()
-    }));
 }
+
+// On load, restore sales from localStorage
+window.addEventListener('DOMContentLoaded', () => {
+    const savedSales = localStorage.getItem('sales');
+    if (savedSales) {
+        const loaded = JSON.parse(savedSales);
+        // Ensure all three types exist
+        ['Fiber', 'Mobile', 'Video'].forEach(type => {
+            if (!loaded.find(s => s.type === type)) {
+                loaded.push({ type, count: 0 });
+            }
+        });
+        sales = loaded;
+        updateSalesList();
+        updateTotalSales();
+    }
+});
+
+// Save sales data when window closes
+window.addEventListener('beforeunload', () => {
+    localStorage.setItem('sales', JSON.stringify(sales));
+});
 
 // Email Function
 function sendEmail() {
@@ -274,57 +375,12 @@ function sendEmail() {
     }
     
     window.location.href = `mailto:manager@example.com?subject=Employee%20Summary&body=${encodeURIComponent(emailBody)}`;
-}
 
-// Chatbot Functions
-function handleTechIssue() {
-    const input = document.getElementById('techInput').value;
-    const messages = document.getElementById('techMessages');
-    
-    messages.innerHTML += `<div class="user-message">${input}</div>`;
-    
-    let response = "I'm here to help with tech issues!";
-    
-    // Basic tech issue responses
-    if (input.toLowerCase().includes('internet')) {
-        response = "Check your modem lights and try restarting your router. If issues persist, contact tech support.";
-    } else if (input.toLowerCase().includes('video')) {
-        response = "Try restarting your set-top box and check if you have the latest firmware.";
-    } else if (input.toLowerCase().includes('cable box')) {
-        response = "Check if the cable box is properly connected and powered. Try a power cycle if needed.";
-    } else if (input.toLowerCase().includes('modem')) {
-        response = "Check power supply and connections. Try resetting the modem if needed.";
-    } else if (input.toLowerCase().includes('remote')) {
-        response = "Ensure the remote is properly paired. Check battery levels and alignment.";
-    }
-    
-    messages.innerHTML += `<div class="bot-message">${response}</div>`;
-    input.value = '';
-}
-
-function handleCustomerIssue() {
-    const input = document.getElementById('customerInput').value;
-    const messages = document.getElementById('customerMessages');
-    
-    messages.innerHTML += `<div class="user-message">${input}</div>`;
-    
-    let response = "I'm here to help with customer handling!";
-    
-    // Basic customer handling responses
-    if (input.toLowerCase().includes('irate') || input.toLowerCase().includes('upset')) {
-        response = "Stay calm, listen actively, and apologize sincerely. Offer solutions and escalate if needed.";
-    } else if (input.toLowerCase().includes('billing')) {
-        response = "Review the bill carefully, explain charges clearly, and offer payment options.";
-    } else if (input.toLowerCase().includes('service')) {
-        response = "Acknowledge the issue, provide status updates, and set expectations.";
-    } else if (input.toLowerCase().includes('happy')) {
-        response = "Great job! Continue providing excellent service and maintain a positive attitude.";
-    } else if (input.toLowerCase().includes('unhappy')) {
-        response = "Listen actively, empathize, and address concerns promptly.";
-    }
-    
-    messages.innerHTML += `<div class="bot-message">${response}</div>`;
-    input.value = '';
+    // Clear sales history after sending summary
+    sales.forEach(sale => sale.count = 0);
+    updateSalesList();
+    updateTotalSales();
+    localStorage.setItem('sales', JSON.stringify(sales));
 }
 
 // Login/Logout Functions
