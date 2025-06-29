@@ -360,12 +360,22 @@ function sendEmail() {
     const totalBreak = document.getElementById('summaryBreak').textContent;
     const totalSales = document.getElementById('summarySales').textContent;
     const loginHours = document.getElementById('loginHours').textContent;
-    
+    const checked = Array.from(document.querySelectorAll('.call-step:checked')).map(cb => cb.value);
+    const userName = document.getElementById('userName').textContent || currentUser || 'Unknown';
+    const callId = document.getElementById('callId').value;
+    const accountNumber = document.getElementById('accountNumber').value;
+    const customerName = document.getElementById('customerName').value;
+    const callBackNumber = document.getElementById('callBackNumber').value;
     let emailBody = `Employee Summary:\n\n` +
+        `Login Person: ${userName}\n` +
+        `Call ID: ${callId}\n` +
+        `Account Number: ${accountNumber}\n` +
+        `Customer Name: ${customerName}\n` +
+        `Call Back Number: ${callBackNumber}\n` +
         `Login Hours: ${loginHours}\n` +
         `Total Break Time: ${totalBreak}\n` +
-        `Total Sales: ${totalSales}\n\n`;
-    
+        `Total Sales: ${totalSales}\n` +
+        `Checked Call Steps: ${checked.length ? checked.join(', ') : 'None'}\n\n`;
     if (currentRole === 'manager') {
         emailBody += `Manager Summary:\n`;
         Object.keys(slotDurations).forEach(type => {
@@ -373,7 +383,6 @@ function sendEmail() {
             emailBody += `${type.charAt(0).toUpperCase() + type.slice(1)} Time: ${time}\n`;
         });
     }
-    
     window.location.href = `mailto:manager@example.com?subject=Employee%20Summary&body=${encodeURIComponent(emailBody)}`;
 
     // Clear sales history after sending summary
@@ -381,6 +390,16 @@ function sendEmail() {
     updateSalesList();
     updateTotalSales();
     localStorage.setItem('sales', JSON.stringify(sales));
+
+    // Clear all checkboxes after sending summary
+    document.querySelectorAll('.call-step').forEach(cb => cb.checked = false);
+    updateCheckedStepsSummary();
+    // Clear call info fields after sending summary
+    ['callId','accountNumber','customerName','callBackNumber'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
+    updateCallInfoSummary();
 }
 
 // Login/Logout Functions
@@ -455,3 +474,41 @@ function updateManagerSummary() {
         });
     }
 }
+
+// Function to update the checked steps summary
+function updateCheckedStepsSummary() {
+    const checked = Array.from(document.querySelectorAll('.call-step:checked')).map(cb => cb.value);
+    document.getElementById('checkedSteps').textContent = checked.length ? checked.join(', ') : 'None';
+}
+
+// Attach event listeners and initialize summary on page load
+window.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.call-step').forEach(cb => {
+        cb.addEventListener('change', updateCheckedStepsSummary);
+    });
+    updateCheckedStepsSummary();
+});
+
+// Add a button to pull call handling steps into summary
+if (!document.getElementById('pullStepsBtn')) {
+    const btn = document.createElement('button');
+    btn.id = 'pullStepsBtn';
+    btn.className = 'neon-btn';
+    btn.textContent = 'Pull Call Steps to Summary';
+    btn.onclick = updateCheckedStepsSummary;
+    const checkboxSection = document.getElementById('checkboxSection');
+    if (checkboxSection) checkboxSection.appendChild(btn);
+}
+
+// --- Call Info Inputs Logic ---
+function updateCallInfoSummary() {
+    document.getElementById('summaryCallId').textContent = document.getElementById('callId').value;
+    document.getElementById('summaryAccountNumber').textContent = document.getElementById('accountNumber').value;
+    document.getElementById('summaryCustomerName').textContent = document.getElementById('customerName').value;
+    document.getElementById('summaryCallBackNumber').textContent = document.getElementById('callBackNumber').value;
+}
+['callId','accountNumber','customerName','callBackNumber'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', updateCallInfoSummary);
+});
+window.addEventListener('DOMContentLoaded', updateCallInfoSummary);
