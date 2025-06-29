@@ -60,12 +60,39 @@
                 </div>
             </div>
 
+            <div class="call-info-inputs">
+                <label for="callId">Call ID</label><input type="text" id="callId" placeholder="Call ID">
+                <label for="accountNumber">Account Number</label><input type="text" id="accountNumber" placeholder="Account Number">
+                <label for="customerName">Customer Name</label><input type="text" id="customerName" placeholder="Customer Name">
+                <label for="callBackNumber">Call Back Number</label><input type="text" id="callBackNumber" placeholder="Call Back Number">
+            </div>
+
+            <div class="checkbox-section" id="checkboxSection">
+                <h3>Call Handling Steps</h3>
+                <label><input type="checkbox" class="call-step" value="Greeting"> Greeting</label>
+                <label><input type="checkbox" class="call-step" value="Active Listening & Problem Identification"> Active Listening & Problem Identification</label>
+                <label><input type="checkbox" class="call-step" value="Empathy"> Empathy</label>
+                <label><input type="checkbox" class="call-step" value="Assurance"> Assurance</label>
+                <label><input type="checkbox" class="call-step" value="CPC"> CPC</label>
+                <label><input type="checkbox" class="call-step" value="Authentication"> Authentication</label>
+                <label><input type="checkbox" class="call-step" value="Problem Resolution"> Problem Resolution</label>
+                <label><input type="checkbox" class="call-step" value="Sales Pitch"> Sales Pitch</label>
+                <label><input type="checkbox" class="call-step" value="Farther Assistance"> Further Assistance</label>
+                <label><input type="checkbox" class="call-step" value="Closing"> Closing</label>
+                <label><input type="checkbox" class="call-step" value="Documentation"> Documentation</label>
+            </div>
+
             <div class="summary-box" id="summaryBox">
                 <h3>Summary</h3>
                 <div class="summary-content">
                     <div class="summary-item">Login Hours: <span id="loginHours">00:00:00</span></div>
                     <div class="summary-item">Total Break Time: <span id="summaryBreak">00:00</span></div>
                     <div class="summary-item">Total Sales: <span id="summarySales">0</span></div>
+                    <div class="summary-item">Checked Call Steps: <span id="checkedSteps"></span></div>
+                    <div class="summary-item">Call ID: <span id="summaryCallId"></span></div>
+                    <div class="summary-item">Account Number: <span id="summaryAccountNumber"></span></div>
+                    <div class="summary-item">Customer Name: <span id="summaryCustomerName"></span></div>
+                    <div class="summary-item">Call Back Number: <span id="summaryCallBackNumber"></span></div>
                     <div class="summary-item manager-summary" style="display: none;">
                         <h4>Manager Summary</h4>
                         <div class="manager-details">
