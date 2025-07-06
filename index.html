@@ -11,10 +11,17 @@
         <h1>Employee Tracking System</h1>
         <div class="login-form">
             <input type="text" id="username" placeholder="Username" required>
+                <div class="password-container">
+                    <input type="password" id="password" placeholder="Password" required>
+                    <span id="togglePassword" title="Show/Hide Password" onclick="togglePasswordVisibility()">👁️</span>
+                </div>
             <select id="userRole">
                 <option value="employee">Employee</option>
                 <option value="manager">Manager</option>
+                <option value="spm">SPM</option>
+                <option value="senior-manager">Senior Manager</option>
             </select>
+                            
             <button class="neon-btn" onclick="handleLogin()">Login</button>
         </div>
     </div>
@@ -22,10 +29,129 @@
     <div class="dashboard-container" id="dashboard" style="display: none;">
         <nav class="navbar">
             <h2>Welcome, <span id="userName"></span></h2>
+            <div class="login-hours-bar">Login Hours: <span id="loginHours">00:00:00</span></div>
+            <div class="session-status" id="sessionStatus" style="font-size: 12px; color: #FFD700; margin-right: 10px;">
+                Session: Active
+            </div>
             <button class="neon-btn" onclick="handleLogout()">Logout</button>
+            <button class="neon-btn" onclick="forceLogout()" style="background: #ff6b6b; margin-left: 10px;">Force Logout</button>
         </nav>
+        <div class="announcement-marquee">
+            <div class="scrolling-text">
+                <!-- Marquee text will appear here -->
+            </div>
+        </div>
 
+        <!-- Manager Dashboard (positioned outside main content wrapper) -->
+        <div class="manager-dashboard" id="managerDashboard" style="display: none; padding: 20px; max-width: 1200px; margin: 0 auto; position: relative;">
+            <!-- Employee Status Panel -->
+            <div id="employeeStatusPanel" style="position: absolute; top: 20px; right: 0; width: 260px; background: rgba(3,5,91,0.95); border: 1px solid #FFA07A; border-radius: 10px; padding: 15px; z-index: 10; min-height: 120px;">
+                <h4 style="color: #FFD700; margin-bottom: 10px; text-align: center;">Live Employee Status</h4>
+                <div id="employeeStatusList" style="max-height: 400px; overflow-y: auto;"></div>
+            </div>
+        </div>
+
+        <!-- SPM Dashboard (positioned outside main content wrapper) -->
+        <div class="spm-dashboard" id="spmDashboard" style="display: none; padding: 20px; max-width: 1200px; margin: 0 auto;">
+            <h2>SPM Dashboard</h2>
+            <div class="dashboard-grid">
+                <div class="dashboard-section">
+                    <h3>Manager Performance Overview</h3>
+                    <div id="spmManagerData">
+                        <!-- Manager data will be populated here -->
+                    </div>
+                </div>
+                <div class="dashboard-section">
+                    <h3>Global Daily Update</h3>
+                    <textarea id="spmDailyUpdate" placeholder="Enter global daily update for all teams..."></textarea>
+                    <button onclick="saveSPMDailyUpdate()" class="neon-btn">Save Global Daily Update</button>
+                </div>
+                <div class="dashboard-section">
+                    <h3>Global Marquee Announcement</h3>
+                    <textarea id="spmMarquee" placeholder="Enter global marquee announcement for all users..."></textarea>
+                    <button onclick="saveSPMMarqueeAnnouncement()" class="neon-btn">Save Global Marquee</button>
+                </div>
+                <div class="dashboard-section">
+                    <h3>Overall Progress Report</h3>
+                    <div class="progress-report">
+                        <div class="sales-chart">
+                            <h4>Overall Sales Overview</h4>
+                            <canvas id="spmSalesDonutChart" width="150" height="150"></canvas>
+                        </div>
+                        <div class="call-metrics">
+                            <h4>Overall Call Coding Metrics</h4>
+                            <div id="spmCallCodingMetrics">
+                                <div class="metric">
+                                    <span class="metric-label">Total DXST:</span>
+                                    <span class="metric-value">0</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Total Sequence ID:</span>
+                                    <span class="metric-value">0</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Call Coding Ratio:</span>
+                                    <span class="metric-value">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Senior Manager Dashboard (positioned outside main content wrapper) -->
+        <div class="senior-manager-dashboard" id="seniorManagerDashboard" style="display: none; padding: 20px; max-width: 1200px; margin: 0 auto;">
+            <h2>Senior Manager Dashboard</h2>
+            <div class="dashboard-grid">
+                <div class="dashboard-section">
+                    <h3>Team Performance Overview</h3>
+                    <div id="seniorManagerData">
+                        <!-- Team data will be populated here -->
+                    </div>
+                </div>
+                <div class="dashboard-section">
+                    <h3>Team Daily Update</h3>
+                    <textarea id="seniorManagerDailyUpdate" placeholder="Enter team daily update..."></textarea>
+                    <button onclick="saveSeniorManagerDailyUpdate()" class="neon-btn">Save Team Daily Update</button>
+                </div>
+                <div class="dashboard-section">
+                    <h3>Team Marquee Announcement</h3>
+                    <textarea id="seniorManagerMarquee" placeholder="Enter team marquee announcement..."></textarea>
+                    <button onclick="saveSeniorManagerMarqueeAnnouncement()" class="neon-btn">Save Team Marquee</button>
+                </div>
+                <div class="dashboard-section">
+                    <h3>Team Progress Report</h3>
+                    <div class="progress-report">
+                        <div class="sales-chart">
+                            <h4>Team Sales Overview</h4>
+                            <canvas id="seniorManagerSalesDonutChart" width="150" height="150"></canvas>
+                        </div>
+                        <div class="call-metrics">
+                            <h4>Team Call Coding Metrics</h4>
+                            <div id="seniorManagerCallCodingMetrics">
+                                <div class="metric">
+                                    <span class="metric-label">Total DXST:</span>
+                                    <span class="metric-value">0</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Total Sequence ID:</span>
+                                    <span class="metric-value">0</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Call Coding Ratio:</span>
+                                    <span class="metric-value">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content-wrapper">
         <div class="dashboard-content">
+                <div class="dashboard-grid">
             <div class="break-tracking" id="breakTracking">
                 <h3>Break Tracking</h3>
                 <div class="break-buttons">
@@ -41,14 +167,57 @@
                 </div>
             </div>
 
+                    <div class="call-details-section" id="callDetailsSection">
+                        <h3>Call Details</h3>
+                        <div class="call-details-inputs">
+                            <label for="sequenceId">Sequence ID</label>
+                            <input type="number" id="sequenceId" placeholder="Sequence ID" min="0" step="1">
+                            <label for="dxstNumber">DXST Number</label>
+                            <input type="text" id="dxstNumber" placeholder="Enter DXST Number (optional)" style="padding: 7px; border: 1px solid #FFA07A; border-radius: 5px; background: rgba(3, 5, 91, 0.8); color: #fff; font-size: 0.95em; width: 100%;">
+                            <button class="neon-btn" id="startCallBtn" type="button" onclick="startCall()">Start Call</button>
+                            <button class="neon-btn" id="endCallBtn" type="button" style="display:none;" onclick="endCall()">End Call</button>
+                            <button class="neon-btn" id="testCallBtn" type="button" style="background: #ff6b6b; margin-top: 5px;">Test Call Details</button>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-section" id="checkboxSection">
+                        <h3>Call Handling Steps</h3>
+                        <label><input type="checkbox" class="call-step" value="Greeting"> Greeting</label>
+                        <label><input type="checkbox" class="call-step" value="Empathy"> Empathy</label>
+                        <label><input type="checkbox" class="call-step" value="Assurance"> Assurance</label>
+                        <label>CPC
+                            <select id="cpcDropdown">
+                                <option value="">Select</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                                <option value="NA">NA</option>
+                            </select>
+                        </label>
+                        <div class="preferred-contact-group">
+                            <span class="preferred-contact-label">Preferred Contact Methods for CPC:</span>
+                            <div class="preferred-contact">
+                                <label><input type="checkbox" class="preferred-contact-method" value="Preferred Number"> Preferred Number</label>
+                                <label><input type="checkbox" class="preferred-contact-method" value="Preferred Text"> Preferred Text</label>
+                                <label><input type="checkbox" class="preferred-contact-method" value="Preferred Email"> Preferred Email</label>
+                            </div>
+                        </div>
+                        <label><input type="checkbox" class="call-step" value="Authentication"> Authentication</label>
+                        <label><input type="checkbox" class="call-step" value="Problem Resolution"> Problem Resolution</label>
+                        <label><input type="checkbox" class="call-step" value="Sales Pitch"> Sales Pitch</label>
+                        <label><input type="checkbox" class="call-step" value="Farther Assistance"> Farther Assistance</label>
+                        <label><input type="checkbox" class="call-step" value="Closing"> Closing</label>
+                        <label><input type="checkbox" class="call-step" value="Documentation"> Documentation</label>
+                        <button id="pullStepsBtn" class="neon-btn" type="button">Pull Call Steps to Summary</button>
+            </div>
+
             <div class="sales-tracking" id="salesTracking">
                 <h3>Sales Tracking</h3>
                 <div class="sales-inputs">
-                    <div class="sales-inputs-row">
-                        <label for="Fiber">Fiber</label><input type="number" id="Fiber" placeholder="Fiber">
-                        <label for="Mobile">Mobile</label><input type="number" id="Mobile" placeholder="Mobile">
-                        <label for="Video">Video</label><input type="number" id="Video" placeholder="Video">
-                        <button class="neon-btn" onclick="addSale()">Add Sale</button>
+                            <div class="sales-inputs-row">
+                                <label for="Fiber">Fiber</label><input type="number" id="Fiber" placeholder="Fiber">
+                                <label for="Mobile">Mobile</label><input type="number" id="Mobile" placeholder="Mobile">
+                                <label for="Video">Video</label><input type="number" id="Video" placeholder="Video">
+                                <button class="neon-btn" onclick="addSale()">Add Sale</button>
                     </div>
                     <div class="sales-list" id="salesList">
                         <h4>Sales History</h4>
@@ -56,43 +225,21 @@
                     </div>
                     <div class="sales-total">
                         <div class="total-sales">Total Sales: <span id="totalSales">0</span></div>
+                            </div>
                     </div>
                 </div>
             </div>
 
-            <div class="call-info-inputs">
-                <label for="callId">Call ID</label><input type="text" id="callId" placeholder="Call ID">
-                <label for="accountNumber">Account Number</label><input type="text" id="accountNumber" placeholder="Account Number">
-                <label for="customerName">Customer Name</label><input type="text" id="customerName" placeholder="Customer Name">
-                <label for="callBackNumber">Call Back Number</label><input type="text" id="callBackNumber" placeholder="Call Back Number">
-            </div>
-
-            <div class="checkbox-section" id="checkboxSection">
-                <h3>Call Handling Steps</h3>
-                <label><input type="checkbox" class="call-step" value="Greeting"> Greeting</label>
-                <label><input type="checkbox" class="call-step" value="Active Listening & Problem Identification"> Active Listening & Problem Identification</label>
-                <label><input type="checkbox" class="call-step" value="Empathy"> Empathy</label>
-                <label><input type="checkbox" class="call-step" value="Assurance"> Assurance</label>
-                <label><input type="checkbox" class="call-step" value="CPC"> CPC</label>
-                <label><input type="checkbox" class="call-step" value="Authentication"> Authentication</label>
-                <label><input type="checkbox" class="call-step" value="Problem Resolution"> Problem Resolution</label>
-                <label><input type="checkbox" class="call-step" value="Sales Pitch"> Sales Pitch</label>
-                <label><input type="checkbox" class="call-step" value="Farther Assistance"> Further Assistance</label>
-                <label><input type="checkbox" class="call-step" value="Closing"> Closing</label>
-                <label><input type="checkbox" class="call-step" value="Documentation"> Documentation</label>
-            </div>
-
             <div class="summary-box" id="summaryBox">
-                <h3>Summary</h3>
+                    
                 <div class="summary-content">
-                    <div class="summary-item">Login Hours: <span id="loginHours">00:00:00</span></div>
+                <h3>Summary</h3>
+                        <div class="summary-item">CPC: <span id="summaryCPC"></span></div>
+                        <div class="summary-item">Preferred Contact: <span id="summaryPreferredContact"></span></div>
                     <div class="summary-item">Total Break Time: <span id="summaryBreak">00:00</span></div>
                     <div class="summary-item">Total Sales: <span id="summarySales">0</span></div>
-                    <div class="summary-item">Checked Call Steps: <span id="checkedSteps"></span></div>
-                    <div class="summary-item">Call ID: <span id="summaryCallId"></span></div>
-                    <div class="summary-item">Account Number: <span id="summaryAccountNumber"></span></div>
-                    <div class="summary-item">Customer Name: <span id="summaryCustomerName"></span></div>
-                    <div class="summary-item">Call Back Number: <span id="summaryCallBackNumber"></span></div>
+                        <div class="summary-item">Checked Call Steps: <span id="checkedSteps"></span></div>
+                        <div class="summary-item">Latest Call Details: <span id="summaryCallDetails"></span></div>
                     <div class="summary-item manager-summary" style="display: none;">
                         <h4>Manager Summary</h4>
                         <div class="manager-details">
@@ -105,50 +252,38 @@
                 </div>
             </div>
 
-            <div class="manager-dashboard" id="managerDashboard" style="display: none;">
-                <h3>Manager Dashboard</h3>
-                <div class="manager-inputs">
-                    <div class="time-slot">
-                        <h4>HR Slot</h4>
-                        <div class="slot-controls">
-                            <button class="neon-btn" onclick="toggleSlot('hr')">Start HR</button>
-                            <span id="hrDuration">00:00</span>
+                <div class="call-summary-table-section" id="callSummaryTableSection">
+                    <h3>Call Summary Table</h3>
+                    <div style="margin-bottom: 10px;">
+                        <button class="neon-btn" onclick="addTestCall()">Add Test Call</button>
+                    </div>
+                    <table class="call-summary-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Sequence ID</th>
+                                <th>DXST Number</th>
+                                <th>Sales (F/M/V)</th>
+                                <th>CPC</th>
+                                <th>Call Steps</th>
+                            </tr>
+                        </thead>
+                        <tbody id="callSummaryTableBody"></tbody>
+                    </table>
                         </div>
                     </div>
-                    <div class="time-slot">
-                        <h4>Supervisor Slot</h4>
-                        <div class="slot-controls">
-                            <button class="neon-btn" onclick="toggleSlot('supervisor')">Start Supervisor</button>
-                            <span id="supervisorDuration">00:00</span>
-                        </div>
+            <div class="daily-update-box" id="dailyUpdateBox">
+                <h3>Daily Update</h3>
+                <div class="update-table">
+                    <div class="update-cell">
+                        <label for="preShift">Pre-shift Briefing:</label>
+                        <textarea id="preShift" rows="10" placeholder="Pre-shift update..." readonly></textarea>
                     </div>
-                    <div class="time-slot">
-                        <h4>Audit Slot</h4>
-                        <div class="slot-controls">
-                            <button class="neon-btn" onclick="toggleSlot('audit')">Start Audit</button>
-                            <span id="auditDuration">00:00</span>
-                        </div>
-                    </div>
+                </div>
+                <button class="neon-btn" id="saveUpdateBtn" style="display:none;">Save Update</button>
                 </div>
             </div>
 
-            <div class="chatbot-container" id="techBot">
-                <h3>Tech Support Bot</h3>
-                <div class="chatbot">
-                    <div class="chat-messages" id="techMessages"></div>
-                    <input type="text" id="techInput" placeholder="Type your tech issue...">
-                    <button class="neon-btn" onclick="handleTechIssue()">Send</button>
-                </div>
-            </div>
-
-            <div class="chatbot-container" id="customerBot">
-                <h3>Customer Handling Bot</h3>
-                <div class="chatbot">
-                    <div class="chat-messages" id="customerMessages"></div>
-                    <input type="text" id="customerInput" placeholder="Type customer situation...">
-                    <button class="neon-btn" onclick="handleCustomerIssue()">Send</button>
-                </div>
-            </div>
         </div>
     </div>
 
