@@ -80,9 +80,7 @@ const apmEmployeeMap = {
   "SPM": [
     "Saumya Shetty", "Ara Khan", "Priyanka Naidu", "Siddharth Chaturvedi", "Ajay Kamti"
   ],
-  "Senior Manager": [
-    "Saumya Shetty", "Ara Khan", "Priyanka Naidu", "Siddharth Chaturvedi", "Ajay Kamti"
-  ]
+  "Senior Manager": []
 };
 
 // Username-password mapping (auto-generated, example passwords)
@@ -228,7 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (currentRole === 'spm') {
             document.getElementById('spmDashboard').style.display = 'block';
             document.getElementById('managerDashboard').style.display = 'none';
-            document.getElementById('seniorManagerDashboard').style.display = 'none';
             // Hide employee-specific sections for SPM
             document.getElementById('breakTracking').style.display = 'none';
             document.getElementById('salesTracking').style.display = 'none';
@@ -241,27 +238,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.manager-summary').style.display = 'none';
             updateSPMDashboard(); // Load initial SPM data
             setupSPMDashboardUpdates(); // Set up automatic updates
-        } else if (currentRole === 'senior-manager') {
-            document.getElementById('seniorManagerDashboard').style.display = 'block';
-            document.getElementById('managerDashboard').style.display = 'none';
-            document.getElementById('spmDashboard').style.display = 'none';
-            // Hide employee-specific sections for Senior Managers
-            document.getElementById('breakTracking').style.display = 'none';
-            document.getElementById('salesTracking').style.display = 'none';
-            document.getElementById('checkboxSection').style.display = 'none';
-            document.getElementById('callDetailsSection').style.display = 'none';
-            document.getElementById('callSummaryTableSection').style.display = 'none';
-            document.getElementById('dailyUpdateBox').style.display = 'none';
-            document.getElementById('summaryBox').style.display = 'none';
-            // Hide manager summary for Senior Managers
-            document.querySelector('.manager-summary').style.display = 'none';
-            updateSeniorManagerDashboard(); // Load initial Senior Manager data
-            setupSeniorManagerDashboardUpdates(); // Set up automatic updates
+
         } else {
             // Show employee-specific sections for employees
             document.getElementById('managerDashboard').style.display = 'none';
             document.getElementById('spmDashboard').style.display = 'none';
-            document.getElementById('seniorManagerDashboard').style.display = 'none';
             document.getElementById('breakTracking').style.display = 'block';
             document.getElementById('salesTracking').style.display = 'block';
             document.getElementById('checkboxSection').style.display = 'block';
@@ -679,48 +660,6 @@ function handleLogin() {
         loadMarqueeAnnouncement();
         // Update session status
         updateSessionStatus();
-    } else if (role === 'senior-manager') {
-        // Check if username is a Senior Manager
-        const seniorManagers = apmEmployeeMap['Senior Manager'];
-        if (!seniorManagers.includes(username)) {
-            alert('Senior Manager name not found. Please enter your exact name as shown in the Senior Manager list.');
-            return;
-        }
-        currentUser = username;
-        currentRole = role;
-        loginTime = new Date();
-        // Save session to localStorage
-        saveSession();
-        // Show dashboard and hide login
-        document.getElementById('loginContainer').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
-        // Show Senior Manager dashboard
-        document.getElementById('seniorManagerDashboard').style.display = 'block';
-        
-        // Hide employee-specific sections for Senior Managers
-        document.getElementById('breakTracking').style.display = 'none';
-        document.getElementById('salesTracking').style.display = 'none';
-        document.getElementById('checkboxSection').style.display = 'none';
-        document.getElementById('callDetailsSection').style.display = 'none';
-        document.getElementById('callSummaryTableSection').style.display = 'none';
-        document.getElementById('dailyUpdateBox').style.display = 'none';
-        document.getElementById('summaryBox').style.display = 'none';
-        
-        updateSeniorManagerDashboard();
-        setupSeniorManagerDashboardUpdates();
-        // Start login timer
-        startLoginTimer();
-        // Update username display
-        document.getElementById('userName').textContent = username;
-        // Load daily update (only if element exists)
-        if (document.getElementById('preShift')) {
-            loadDailyUpdate();
-        }
-        // Load marquee announcement
-        loadMarqueeAnnouncement();
-        
-        // Update session status
-        updateSessionStatus();
     }
 }
 
@@ -768,7 +707,7 @@ function forceLogout() {
     document.getElementById('loginContainer').style.display = 'block';
     document.getElementById('dashboard').style.display = 'none';
     document.getElementById('spmDashboard').style.display = 'none';
-    document.getElementById('seniorManagerDashboard').style.display = 'none';
+    // document.getElementById('seniorManagerDashboard').style.display = 'none';
     
     // Clear login form
     document.getElementById('username').value = '';
@@ -862,7 +801,7 @@ function handleLogout() {
     document.getElementById('loginContainer').style.display = 'block';
     document.getElementById('dashboard').style.display = 'none';
     document.getElementById('spmDashboard').style.display = 'none';
-    document.getElementById('seniorManagerDashboard').style.display = 'none';
+    // document.getElementById('seniorManagerDashboard').style.display = 'none';
 
     // Clear call summary table and call history
     callHistory = [];
