@@ -54,13 +54,25 @@ const apmEmployeeMap = {
     "Alfisa Ahlat", "Arjun Jog", "Ayush Ashok Bakal", "Harsh Jadhav", "Namrata Pandey", "Nisha Rati", "Piyush Tiwari", "Prabodh Kumar Bunker", "Prithviraj Gurupasad Nadkarni", "Simran Kaur Heera Singh Sandhu", "Vivek Jiaram Chudasama", "Yogesh Komre"
   ],
   "Faheem Khan": [
-    "Aman Anil Singh", "Arjun Zore", "Dhanashree Salvo", "Gaurav Gore", "Jacile Hirani", "Kalpesh Kargutkar", "Mittali Milind Sulankhe", "Muskan Rizwan Ansari", "Pooja Lalan Savji", "Sahil Jaywant Chavan", "Sahil Sanjay Sukhla", "Sonali Sushant Panda", "Umar Junaid Khatib", "Yash Anant Jadhav"
-  ],
+    ],
   "Nikita Jawkar": [
-    "Akshay Prasad", "Chirag Kedre", "Darshan Chaudhari", "Dheeraj Deepak Mhatre", "Honey Rawat", "Jagriti Ankit Sharma", "Mohammad Jublee Shaikh", "Namrata Banerji", "Nitin Raj", "Sajjadras Prashant Redkar", "Shubeda Abdul Selam Arai", "Sushmita Jaya Palan", "Vikrant Sawad", "Yash Rajkumar"
+    
   ],
   "Ritesh Sherigar": [
-    "Aayush Samant", "Aditi Bivans", "Darshan Bhimrao Lonare", "Gaurav Rajesh Borse", "Girish Rajesh Gosavi", "Mohd Shoaib Iqbal", "Mohd Ishad Mohd Ilyas Shaikh", "Sambhavi Shivendra Sarang", "Satyajit Tukaram Prabhu", "Snehank Pawar", "Swipnil Mane"
+    "hagufa Abdul Salam Arai",
+    "MohdSiddique Shaikh",
+    "Dheeraj Deepak Mhatre",
+    "Sudeep Menon",
+    "Raj Kataria",
+    "Darshan Chaudhari",
+    "Chirag Kedar",
+    "Akshay Prasad",
+    "Saiprasad Redkar",
+    "Sushmit Palan",
+    "Jagruti Shinde",
+    "Vikrant Pal",
+    "Honey Rawat",
+    "Vikaskumar Yadav"
   ],
   "Mahesh Ghadge": [
     "Achal Gautam Vishwakarma", "Akansha Sunil Sable", "Fardeen Shakil Shaikh", "Mahak Chanderlal Wadhwani", "Mayur Maniyar", "Naznin Nadir Ahmed Sayed", "Saurabh More", "Siddhant Jayprakash Pathak", "Tahir Mohammed Khan", "Vivekraj Vinod Ghadge"
@@ -119,6 +131,20 @@ const userPasswords = {
   "Priyesh Jagdish Gohil": "priyesh2024",
   "Shen Subramenian Iyer": "shen2024",
   "Tushar Singh": "tushar2024",
+  "Shagufa Abdul Salam Arai": "shagufa2024",
+  "MohdSiddique Shaikh": "mohdsiddique2024",
+  "Dheeraj Deepak Mhatre": "dheeraj2024",
+  "Sudeep Menon": "sudeep2024",
+  "Raj Kataria": "rajkataria2024",
+  "Darshan Chaudhari": "darshan2024",
+  "Chirag Kedar": "chirag2024",
+  "Akshay Prasad": "akshay2024",
+  "Saiprasad Redkar": "saiprasad2024",
+  "Sushmit Palan": "sushmit2024",
+  "Jagruti Shinde": "jagruti2024",
+  "Vikrant Pal": "vikrant2024",
+  "Honey Rawat": "honey2024",
+  "Vikaskumar Yadav": "vikaskumar2024",
   // ...repeat for all employees in the mapping
 };
 
@@ -2693,3 +2719,4 @@ window.addEventListener('storage', (e) => {
     }
 });
 
+ 
