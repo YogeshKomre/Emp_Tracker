@@ -19,7 +19,6 @@
                 <option value="employee">Employee</option>
                 <option value="manager">Manager</option>
                 <option value="spm">SPM</option>
-                <option value="senior-manager">Senior Manager</option>
             </select>
                             
             <button class="neon-btn" onclick="handleLogin()">Login</button>
@@ -100,54 +99,7 @@
             </div>
         </div>
 
-        <!-- Senior Manager Dashboard (positioned outside main content wrapper) -->
-        <div class="senior-manager-dashboard" id="seniorManagerDashboard" style="display: none; padding: 20px; max-width: 1200px; margin: 0 auto;">
-            <h2>Senior Manager Dashboard</h2>
-            <div class="dashboard-grid">
-                <div class="dashboard-section">
-                    <h3>Team Performance Overview</h3>
-                    <div id="seniorManagerData">
-                        <!-- Team data will be populated here -->
-                    </div>
-                </div>
-                <div class="dashboard-section">
-                    <h3>Team Daily Update</h3>
-                    <textarea id="seniorManagerDailyUpdate" placeholder="Enter team daily update..."></textarea>
-                    <button onclick="saveSeniorManagerDailyUpdate()" class="neon-btn">Save Team Daily Update</button>
-                </div>
-                <div class="dashboard-section">
-                    <h3>Team Marquee Announcement</h3>
-                    <textarea id="seniorManagerMarquee" placeholder="Enter team marquee announcement..."></textarea>
-                    <button onclick="saveSeniorManagerMarqueeAnnouncement()" class="neon-btn">Save Team Marquee</button>
-                </div>
-                <div class="dashboard-section">
-                    <h3>Team Progress Report</h3>
-                    <div class="progress-report">
-                        <div class="sales-chart">
-                            <h4>Team Sales Overview</h4>
-                            <canvas id="seniorManagerSalesDonutChart" width="150" height="150"></canvas>
-                        </div>
-                        <div class="call-metrics">
-                            <h4>Team Call Coding Metrics</h4>
-                            <div id="seniorManagerCallCodingMetrics">
-                                <div class="metric">
-                                    <span class="metric-label">Total DXST:</span>
-                                    <span class="metric-value">0</span>
-                                </div>
-                                <div class="metric">
-                                    <span class="metric-label">Total Sequence ID:</span>
-                                    <span class="metric-value">0</span>
-                                </div>
-                                <div class="metric">
-                                    <span class="metric-label">Call Coding Ratio:</span>
-                                    <span class="metric-value">0%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
 
         <div class="main-content-wrapper">
         <div class="dashboard-content">
