@@ -59,9 +59,9 @@ const apmEmployeeMap = {
     
   ],
   "Ritesh Sherigar": [
-    "hagufa Abdul Salam Arai",
+    "Shagufa Arai",
     "MohdSiddique Shaikh",
-    "Dheeraj Deepak Mhatre",
+    "Dheeraj Mhatre",
     "Sudeep Menon",
     "Raj Kataria",
     "Darshan Chaudhari",
@@ -131,7 +131,7 @@ const userPasswords = {
   "Priyesh Jagdish Gohil": "priyesh2024",
   "Shen Subramenian Iyer": "shen2024",
   "Tushar Singh": "tushar2024",
-  "Shagufa Abdul Salam Arai": "shagufa2024",
+  "Shagufa Arai": "shagufa2024",
   "MohdSiddique Shaikh": "mohdsiddique2024",
   "Dheeraj Deepak Mhatre": "dheeraj2024",
   "Sudeep Menon": "sudeep2024",
