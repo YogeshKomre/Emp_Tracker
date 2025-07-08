@@ -622,7 +622,6 @@ function handleLogin() {
         document.getElementById('dashboard').style.display = 'block';
         // Show manager dashboard
             document.getElementById('managerDashboard').style.display = 'block';
-        
         // Hide employee-specific sections for managers
         document.getElementById('breakTracking').style.display = 'none';
         document.getElementById('salesTracking').style.display = 'none';
@@ -631,7 +630,6 @@ function handleLogin() {
         document.getElementById('callSummaryTableSection').style.display = 'none';
         document.getElementById('dailyUpdateBox').style.display = 'none';
         document.getElementById('summaryBox').style.display = 'none';
-        
         updateManagerDashboard();
         setupManagerDashboardUpdates();
         // Start login timer
@@ -639,14 +637,14 @@ function handleLogin() {
         // Update username display
         document.getElementById('userName').textContent = username;
         // Store manager's employee list for use in dashboard (normalized)
-        localStorage.setItem('managerEmployeeList', JSON.stringify(apmEmployeeMap[username].map(normalizeName)));
+        const normalizedEmployeeList = (apmEmployeeMap[username] || []).map(normalizeName);
+        localStorage.setItem('managerEmployeeList', JSON.stringify(normalizedEmployeeList));
         // Load daily update (only if element exists)
         if (document.getElementById('preShift')) {
             loadDailyUpdate();
         }
         // Load marquee announcement
         loadMarqueeAnnouncement();
-        
         // Update session status
         updateSessionStatus();
     } else if (role === 'spm') {
@@ -864,6 +862,10 @@ function handleLogout() {
     }
     if (currentRole === 'employee' && currentUser) {
         handleEmployeeLogout(currentUser);
+    }
+    if (window.managerCallSummaryInterval) {
+        clearInterval(window.managerCallSummaryInterval);
+        window.managerCallSummaryInterval = null;
     }
 }
 
@@ -1548,12 +1550,10 @@ function updateManagerDashboard() {
             <h4 style="color: #FFD700; margin-bottom: 15px;">Complete Call Summary - All Employees</h4>
             <div style="margin-bottom: 10px;">
                 <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
-                    <button class="neon-btn" onclick="refreshCallSummaryTable()">Refresh Table</button>
+                    <button id="manualRefreshBtn" class="neon-btn" style="margin-bottom:10px;">🔄 Refresh Table</button>
                     <span style="color: #FFA07A; font-size: 12px;">Last updated: ${new Date().toLocaleString()}</span>
                 </div>
-                <div id="comprehensiveCallTable" style="overflow-x: auto; max-height: 400px; overflow-y: auto;">
-                    ${generateComprehensiveCallTable()}
-                </div>
+                <div id="comprehensiveCallTable"></div>
             </div>
         </div>
     `;
@@ -1645,6 +1645,18 @@ function setupManagerDashboardUpdates() {
             }
         });
     }
+    // Add polling to refresh the call summary table every 10 seconds
+    if (currentRole === 'manager') {
+        if (window.managerCallSummaryInterval) {
+            clearInterval(window.managerCallSummaryInterval);
+        }
+        window.managerCallSummaryInterval = setInterval(() => {
+            const dashboard = document.getElementById('managerDashboard');
+            if (dashboard && dashboard.style.display !== 'none') {
+                refreshCallSummaryTable();
+            }
+        }, 10000); // 10 seconds
+    }
 }
 
 // Generate comprehensive call summary table for all employees
@@ -1654,21 +1666,18 @@ function generateComprehensiveCallTable() {
     try {
         employeeList = JSON.parse(localStorage.getItem('managerEmployeeList')) || [];
     } catch (e) {}
-    
     if (employeeList.length === 0) {
         return '<p style="color: #FFA07A; text-align: center;">No employee data available yet.</p>';
     }
-    
     // Collect all calls ONLY from employees in managerEmployeeList
     let allCalls = [];
-    employeeList.forEach(employeeName => {
+    employeeList.forEach(employeeKey => {
         // Defensive: Only use data for employees in the manager's list
-        if (!employeeList.includes(employeeName)) return;
-        const data = allManagerData[employeeName];
+        const data = allManagerData[employeeKey];
         if (data && data.callHistory && data.callHistory.length > 0) {
             data.callHistory.forEach(call => {
                 allCalls.push({
-                    employeeName: employeeName,
+                    employeeName: data.employeeName || employeeKey, // fallback to key if name missing
                     sequenceId: call.sequenceId,
                     dxstNumber: call.dxstNumber,
                     sales: call.sales,
@@ -1680,14 +1689,11 @@ function generateComprehensiveCallTable() {
             });
         }
     });
-    
     // Sort calls by timestamp (newest first)
     allCalls.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-    
     if (allCalls.length === 0) {
         return '<p style="color: #FFA07A; text-align: center;">No calls recorded yet.</p>';
     }
-    
     let tableHTML = `
         <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
             <thead>
@@ -1705,12 +1711,10 @@ function generateComprehensiveCallTable() {
             </thead>
             <tbody>
     `;
-    
     allCalls.forEach((call, index) => {
         const rowColor = index % 2 === 0 ? 'rgba(3, 5, 91, 0.5)' : 'rgba(3, 5, 91, 0.3)';
-        const callTime = new Date(call.timestamp).toLocaleTimeString();
+        const callTime = call.timestamp ? new Date(call.timestamp).toLocaleTimeString() : '';
         const duration = call.duration ? formatDuration(call.duration) : 'N/A';
-        
         tableHTML += `
             <tr style="background: ${rowColor};">
                 <td style="border: 1px solid #FFA07A; padding: 6px; text-align: center;">${allCalls.length - index}</td>
@@ -1724,14 +1728,13 @@ function generateComprehensiveCallTable() {
                 </td>
                 <td style="border: 1px solid #FFA07A; padding: 6px; text-align: center;">${call.cpc || 'N/A'}</td>
                 <td style="border: 1px solid #FFA07A; padding: 6px; text-align: center; font-size: 10px; max-width: 200px; word-wrap: break-word;">
-                    ${call.callSteps.join(', ')}
+                    ${call.callSteps ? call.callSteps.join(', ') : ''}
                 </td>
                 <td style="border: 1px solid #FFA07A; padding: 6px; text-align: center;">${duration}</td>
                 <td style="border: 1px solid #FFA07A; padding: 6px; text-align: center; font-size: 11px;">${callTime}</td>
             </tr>
         `;
     });
-    
     tableHTML += `
             </tbody>
         </table>
@@ -1739,18 +1742,31 @@ function generateComprehensiveCallTable() {
             Total Calls: ${allCalls.length} | Showing all calls from your employees only
         </div>
     `;
-    
     return tableHTML;
 }
 
 // Refresh call summary table function
 function refreshCallSummaryTable() {
-    if (currentRole === 'manager') {
-        const tableContainer = document.getElementById('comprehensiveCallTable');
-        if (tableContainer) {
-            tableContainer.innerHTML = generateComprehensiveCallTable();
+    const loading = document.getElementById('callSummaryLoading');
+    if (loading) loading.style.display = 'block';
+    setTimeout(() => {
+        if (currentRole === 'manager') {
+            const tableContainer = document.getElementById('comprehensiveCallTable');
+            if (tableContainer) {
+                const html = generateComprehensiveCallTable();
+                tableContainer.innerHTML = html;
+
+                // Extract current call count from the table
+                const match = html.match(/Total Calls: (\\d+)/);
+                const currentCount = match ? parseInt(match[1], 10) : 0;
+                if (currentCount > lastCallCount) {
+                    alert('New call data received!');
+                }
+                lastCallCount = currentCount;
+            }
         }
-    }
+        if (loading) loading.style.display = 'none';
+    }, 300);
 }
 
 // Helper function to format duration
@@ -2741,4 +2757,27 @@ function normalizeName(name) {
     return name.trim().toLowerCase();
 }
 
- 
+let lastCallCount = 0;
+
+function refreshCallSummaryTable() {
+    const loading = document.getElementById('callSummaryLoading');
+    if (loading) loading.style.display = 'block';
+    setTimeout(() => {
+        if (currentRole === 'manager') {
+            const tableContainer = document.getElementById('comprehensiveCallTable');
+            if (tableContainer) {
+                const html = generateComprehensiveCallTable();
+                tableContainer.innerHTML = html;
+
+                // Extract current call count from the table
+                const match = html.match(/Total Calls: (\\d+)/);
+                const currentCount = match ? parseInt(match[1], 10) : 0;
+                if (currentCount > lastCallCount) {
+                    alert('New call data received!');
+                }
+                lastCallCount = currentCount;
+            }
+        }
+        if (loading) loading.style.display = 'none';
+    }, 300);
+}
