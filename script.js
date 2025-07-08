@@ -638,8 +638,8 @@ function handleLogin() {
         startLoginTimer();
         // Update username display
         document.getElementById('userName').textContent = username;
-        // Store manager's employee list for use in dashboard
-        localStorage.setItem('managerEmployeeList', JSON.stringify(apmEmployeeMap[username]));
+        // Store manager's employee list for use in dashboard (normalized)
+        localStorage.setItem('managerEmployeeList', JSON.stringify(apmEmployeeMap[username].map(normalizeName)));
         // Load daily update (only if element exists)
         if (document.getElementById('preShift')) {
             loadDailyUpdate();
@@ -1362,7 +1362,6 @@ function sendToManagerDashboard() {
         console.log('No user logged in');
         return;
     }
-    
     const managerData = {
         employeeName: currentUser,
         timestamp: new Date().toISOString(),
@@ -1373,15 +1372,12 @@ function sendToManagerDashboard() {
         salesSummary: getSalesSummary(),
         cpcSummary: getCPCSummary()
     };
-    
-    // Save to localStorage for manager access
-    localStorage.setItem(`managerData_${currentUser}`, JSON.stringify(managerData));
-    
-    // Also save to a general manager data store
+    // Save to localStorage for manager access (normalized key)
+    localStorage.setItem(`managerData_${normalizeName(currentUser)}`, JSON.stringify(managerData));
+    // Also save to a general manager data store (normalized key)
     const allManagerData = JSON.parse(localStorage.getItem('allManagerData') || '{}');
-    allManagerData[currentUser] = managerData;
+    allManagerData[normalizeName(currentUser)] = managerData;
     localStorage.setItem('allManagerData', JSON.stringify(allManagerData));
-    
     console.log('Call summary sent to manager dashboard');
 }
 
@@ -1440,16 +1436,12 @@ function updateManagerDashboard() {
     if (currentRole !== 'manager') {
         return;
     }
-    
     const allManagerData = JSON.parse(localStorage.getItem('allManagerData') || '{}');
     const managerDashboard = document.getElementById('managerDashboard');
     if (!managerDashboard) {
         return;
     }
-    
-    // Update employee status panel first
     updateEmployeeStatusPanel();
-    // Get the manager's employee list
     let employeeList = [];
     try {
         employeeList = JSON.parse(localStorage.getItem('managerEmployeeList')) || [];
@@ -1571,7 +1563,7 @@ function updateManagerDashboard() {
     } else {
         dashboardHTML += '<div class="employee-summaries" style="margin-top: 0;">';
         employeeList.forEach(employeeName => {
-            const data = allManagerData[employeeName];
+            const data = allManagerData[normalizeName(employeeName)];
             if (!data) return;
             dashboardHTML += `
                 <div class="employee-summary" style="background: rgba(3, 5, 91, 0.8); margin-bottom: 10px; padding: 15px; border-radius: 10px; border: 1px solid #FFA07A;">
@@ -2742,6 +2734,11 @@ function resetEmployeePassword(employeeName, newPassword = null) {
     userPasswords[employeeName] = newPassword;
     alert(`Password for ${employeeName} has been reset to: ${newPassword}`);
     // Optionally, persist to localStorage or backend if needed
+}
+
+// Utility to normalize names for consistent key usage
+function normalizeName(name) {
+    return name.trim().toLowerCase();
 }
 
  
