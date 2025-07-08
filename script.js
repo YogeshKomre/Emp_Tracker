@@ -36,22 +36,22 @@ let callHistory = [];
 // APM (Manager) to Employee mapping
 const apmEmployeeMap = {
   "Bhavin Visaria": [
-    "Affan Mulla", "Anisha Dsouza", "Aquib Masood", "Atharv Shevale", "Biswajit Periala", "Dhaval Morabia", "Dinesh Kalade", "Gabriel Joseph", "harpreetkaur Khungura", "Mohammadumair Shaikh", "Priyesh Gohil", "Shen Iyer", "Tushar Singh"
+    "Affan Kasim Mulla", "Anisha Anthony Dsouza", "Aquib Malik Masood", "Atharv Shevale", "Biswajit Periala", "Dhaval Morabia", "Dinesh Kalade", "Gabriel Hudson Joseph", "Impreetkaut Khungura", "Mohammadumair Shaikh", "Priyesh Jagdish Gohil", "Shen Subramenian Iyer", "Tushar Singh"
   ],
   "Dinesh Nihalani": [
-    "Abhijeet Bhuyer", "Abhishek Mandlik", "Aditya Mishke", "Bhavesh Madave", "Heena Bhakta", "Komal Gosavi", "Mohammad Khan", "Priya Patil", "Rushi Dhere", "Satyajit Jadhav", "Tanvi Sevkar", "Tushar More", "Viral Mane"
+    "Abhijeet Bhuyer", "Abhishek Shaik Mandlik", "Aditya Mishke", "Bhavesh Anand Madave", "Heena Bhakta", "Komal Gosavi", "Mohammad Bilal Khan", "Priya Patil", "Rushi Rajendra Dhere", "Satyajit Jadhav", "Tanvi Sevkar", "Tushar More", "Viral Mane"
   ],
   "Rajendra Bajpai": [
-    "Abdulla Shaikh", "Ashmita Suryawanshi", "Gavin Carvalho", "Karma Tamang", "Mohit Prajapat", "Nagesh Sathe", "Nitesh Kshirsagar", "Pawan Raut", "Sampat Chavan"
+    "Abdulla Shaikh", "Ashmita Suryawanshi", "Gavin Carvalho", "Karma Rinchen Tamang", "Mohit Prajapat", "Nagesh Sathe", "Nitesh Kshirsagar", "Pawan Raut", "Sampat Balasaheb Chavan"
   ],
   "Ameeruddin Salmani": [
-    "Aarti Dhavani", "Ajaysh Yadav", "Chandan Singh", "Diksha Makija", "Hitesh Israni", "Irfan Shaikh", "Lalit Nair", "Maryam Tambe", "Rohit Bhise", "Roshan Raul", "Shivam Yadav"
+    "Aarti Ashok Dhavani", "Ajaysh Ravindranath Yadav", "Chandan Mandal Singh", "Diksha Govind Makija", "Hitesh Israni", "Irfan Shaikh", "Lalit Sreekumar Nair", "Maryam Aysar Alee Tambe", "Rohit Bhise", "Roshan Raul", "Shivam Ramesh Yadav"
   ],
   "Vishal Pandey": [
-    "Ajmal Shaikh", "Arya Anil", "Gandharv Singh", "Gaurav Sugare", "Girish Dubey", "Hitesh Jaisinghani", "Mimansha Subhadarshini", "MohammadShahid Khan", "Om Rajput", "Subhasree Atharthi", "Tatveer Singh", "Vikas Havale"
+    "Ajmal Shaikh", "Arya Anil", "Gandharv Singh", "Gaurav Sugare", "Girish Suresh Kumar Dubey", "Hitesh Jaisinghani", "Mimansha Subhadarshini", "Mohammad Shahid Rawabali Khan", "Om Sanjay Rajput", "Subhasree Atharthi", "Tatveer Singh", "Vikas Havale"
   ],
   "Lukas Chetty": [
-    "Alfisa Ahlat", "Arjun Jog", "Ayush Bakal", "Harsh Jadhav", "Namrata Pandey", "Nisha Rai", "Piyush Tiwari", "Prabodh Bunker", "Prithviraj Nadkarni", "SimranKaur Sandhu", "Vivek Chudasama", "Yogesh Komre"
+    "Alfisa Ahlat", "Arjun Jog", "Ayush Ashok Bakal", "Harsh Jadhav", "Namrata Pandey", "Nisha Rati", "Piyush Tiwari", "Prabodh Kumar Bunker", "Prithviraj Gurupasad Nadkarni", "Simran Kaur Heera Singh Sandhu", "Vivek Jiaram Chudasama", "Yogesh Komre"
   ],
   "Faheem Khan": [
     ],
@@ -59,9 +59,9 @@ const apmEmployeeMap = {
     
   ],
   "Ritesh Sherigar": [
-    "Shagufa Arai",
+    "hagufa Abdul Salam Arai",
     "MohdSiddique Shaikh",
-    "Dheeraj Mhatre",
+    "Dheeraj Deepak Mhatre",
     "Sudeep Menon",
     "Raj Kataria",
     "Darshan Chaudhari",
@@ -75,25 +75,25 @@ const apmEmployeeMap = {
     "Vikaskumar Yadav"
   ],
   "Mahesh Ghadge": [
-    "Achal Vishwakarma", "Akansha Sable", "Fardeen Shaikh", "Mahak Wadhwani", "Mayur Maniyar", "Naznin Sayed", "Saurabh More", "Siddhant Pathak", "Tahir Khan", "Vivekraj Ghadge"
+    "Achal Gautam Vishwakarma", "Akansha Sunil Sable", "Fardeen Shakil Shaikh", "Mahak Chanderlal Wadhwani", "Mayur Maniyar", "Naznin Nadir Ahmed Sayed", "Saurabh More", "Siddhant Jayprakash Pathak", "Tahir Mohammed Khan", "Vivekraj Vinod Ghadge"
   ],
   "Melvyn Shinde": [
-    "Ashutosh Waghmare", "Jatin Parab", "Kaushal Vishwakarma", "Mohammed Ansari", "Sameer Vhatkar", "Shweta Rajoriya", "Vedant Latke"
+    "Ashutosh Waghmare", "Jatin Ajay Parab", "Kaushal Chandrashekhar Vishwakarma", "Mohammed Kaseeb Asif Ansari", "Sameer Satish Vhatkar", "Shweta Rakesh Rajoriya", "Vedant Dinesh Latke"
   ],
   "Kamala Ramanathan": [
-    "Aman Giri", "Hemant Kumar", "Neelak Ghogale", "Priyanka Bandre", "Sanket Kharmbale", "Sanket Padwal", "Sankita Ambatti", "Sumit Patil"
+    "Aman Indori Giri", "Hemant Kumar", "Neelak Bahubao Ghogale", "Priyanka Bandre", "Sanket Chandrakant Kharmbale", "Sanket Padwal", "Sankita Anjali Ambatti", "Sumit Subhash Patil"
   ],
   "Abdulrahim Khan": [
-    "Aman Giri", "Hemant Kumar", "Neelak Ghogale", "Priyanka Bandre", "Sanket Kharmbale", "Sanket Padwal", "Sankita Ambatti", "Sumit Patil"
+    "Aman Indori Giri", "Hemant Kumar", "Neelak Bahubao Ghogale", "Priyanka Bandre", "Sanket Chandrakant Kharmbale", "Sanket Padwal", "Sankita Anjali Ambatti", "Sumit Subhash Patil"
   ],
   "Craig Miranda": [
-    "Meyhesh Naik", "Mitesh Tupe", "MohdFaruk Ansari", "Mohd Kumar", "Mohsin Shaikh", "Sumit Desai", "Suresh Mendki", "Yash Sathe"
+    "Meyhesh Rajaram Naik", "Mitesh Pramod Tupe", "Mohd. Faruk Jamaluddin Ansari", "Mohd. Kaushal Kumar", "Mohsin Sadiq Shaikh", "Sumit Desai", "Suresh Mendki", "Yash Jayeshwar Sathe"
   ],
   "SPM": [
     "Saumya Shetty", "Ara Khan", "Priyanka Naidu", "Siddharth Chaturvedi", "Ajay Kamti"
   ],
   "APJM": [
-      "Ankit Sarngi", "Gaurav Savant"
+    "Ankit Sarangi" , "Gaurav Sawant"
   ],
 };
 
@@ -119,22 +119,19 @@ const userPasswords = {
   "Priyanka Naidu": "pn@2024!",
   "Siddharth Chaturvedi": "sc@2024!",
   "Ajay Kamti": "ajk@2024!",
-  "Ankit Sarngi" : "as@2025!",
-  "Gaurav Savant" : "gs@2025!",
- 
   // Employees (examples, you can randomize or use a pattern)
-  "Affan Mulla": "affan2024",
-  "Anisha Dsouza": "anisha2024",
-  "Aquib Masood": "aquib2024",
+  "Affan Kasim Mulla": "affan2024",
+  "Anisha Anthony Dsouza": "anisha2024",
+  "Aquib Malik Masood": "aquib2024",
   "Atharv Shevale": "atharv2024",
   "Biswajit Periala": "biswajit2024",
   "Dhaval Morabia": "dhaval2024",
   "Dinesh Kalade": "dinesh2024",
-  "Gabriel Joseph": "gabriel2024",
+  "Gabriel Hudson Joseph": "gabriel2024",
   "Impreetkaut Khungura": "impreet2024",
   "Mohammadumair Shaikh": "umair2024",
-  "Priyesh Gohil": "priyesh2024",
-  "Shen Iyer": "shen2024",
+  "Priyesh Jagdish Gohil": "priyesh2024",
+  "Shen Subramenian Iyer": "shen2024",
   "Tushar Singh": "tushar2024",
   "Shagufa Arai": "shagufa2024",
   "MohdSiddique Shaikh": "mohdsiddique2024",
@@ -2723,5 +2720,28 @@ window.addEventListener('storage', (e) => {
         updateEmployeeStatusPanel();
     }
 });
+
+// Function for managers to reset an employee's login ID and password
+function resetEmployeePassword(employeeName, newPassword = null) {
+    // Only allow if current user is a manager and employee is in their team
+    if (currentRole !== 'manager') {
+        alert('Only managers can reset employee passwords.');
+        return;
+    }
+    const employeeList = apmEmployeeMap[currentUser] || [];
+    if (!employeeList.includes(employeeName)) {
+        alert('This employee is not in your team.');
+        return;
+    }
+    // Generate a new password if not provided
+    if (!newPassword) {
+        // Use first part of name (first name, lowercased, no spaces) + 2024
+        const firstName = employeeName.split(' ')[0].toLowerCase().replace(/[^a-z]/g, '');
+        newPassword = firstName + '2024';
+    }
+    userPasswords[employeeName] = newPassword;
+    alert(`Password for ${employeeName} has been reset to: ${newPassword}`);
+    // Optionally, persist to localStorage or backend if needed
+}
 
  
