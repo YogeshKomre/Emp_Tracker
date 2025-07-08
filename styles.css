@@ -56,6 +56,8 @@ body {
     justify-content: center;
     min-height: 100vh;
     gap: 16px;
+    border: 4px dashed #FFA500;
+    box-shadow: 0 0 40px 10px #00FFFF88;
 }
 
 .dashboard-container {
@@ -68,27 +70,27 @@ body {
     position: relative;
     z-index: 1;
     background: rgba(3, 5, 91, 0.8);
-    padding: 24px 28px;
-    border-radius: 14px;
+    padding: 32px 36px;
+    border-radius: 22px;
     backdrop-filter: blur(10px);
     border: none;
     display: flex;
     flex-direction: column;
     gap: 15px;
-    min-width: 320px;
-    box-shadow: 0 0 32px 4px #FFA50088, 0 0 32px 4px #00FFFF88;
+    min-width: 340px;
+    box-shadow: 0 0 64px 16px #FFA500cc, 0 0 64px 16px #00FFFFcc;
     overflow: visible;
 }
 .login-form::before {
     content: '';
     position: absolute;
-    top: -8px; left: -8px; right: -8px; bottom: -8px;
+    top: -16px; left: -16px; right: -16px; bottom: -16px;
     z-index: -1;
-    border-radius: 18px;
+    border-radius: 30px;
     background: linear-gradient(270deg, #FFA500, #00FFFF, #FFA500, #00FFFF);
     background-size: 400% 400%;
-    animation: neon-border-animate 2.5s linear infinite;
-    box-shadow: 0 0 48px 8px #FFA500cc, 0 0 48px 8px #00FFFFcc;
+    animation: neon-border-animate 1.2s linear infinite;
+    box-shadow: 0 0 96px 24px #FFA500ff, 0 0 96px 24px #00FFFFff;
     pointer-events: none;
 }
 @keyframes neon-border-animate {
