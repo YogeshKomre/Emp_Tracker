@@ -1,4 +1,4 @@
-  /* Global Styles */
+/* Global Styles */
 * {
     margin: 0;
     padding: 0;
@@ -65,7 +65,7 @@ body {
     padding: 16px;
 }
 
-/* Neon Border Animation for Login Form */
+/* Neon Border Animation for Login Form 
 .login-form {
     position: relative;
     z-index: 1;
@@ -97,7 +97,7 @@ body {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
-}
+} */
 
 .login-form input,
 .login-form select {
