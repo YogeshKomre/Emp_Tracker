@@ -61,9 +61,9 @@ const apmEmployeeMap = {
     
   ],
   "Ritesh Sherigar": [
-    "hagufa Abdul Salam Arai",
+    "Shagufa Arai",
     "MohdSiddique Shaikh",
-    "Dheeraj Deepak Mhatre",
+    "Dheeraj Mhatre",
     "Sudeep Menon",
     "Raj Kataria",
     "Darshan Chaudhari",
