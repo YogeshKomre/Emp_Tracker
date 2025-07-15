@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employee Tracking System</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="login-container" id="loginContainer">
@@ -162,49 +162,76 @@
                         <label><input type="checkbox" class="call-step" value="Documentation"> Documentation</label>
                         <label><input type="checkbox" class="call-step" value="Survey Pitch">Servey Pitch</label>
                         <button id="pullStepsBtn" class="neon-btn" type="button">Pull Call Steps to Summary</button>
-            </div>
-
-            <div class="sales-tracking" id="salesTracking">
-                <h3>Sales Tracking</h3>
-                <div class="sales-inputs">
-                            <div class="sales-inputs-row">
-                                <label for="Fiber">Fiber</label><input type="number" id="Fiber" placeholder="Fiber">
-                                <label for="Mobile">Mobile</label><input type="number" id="Mobile" placeholder="Mobile">
-                                <label for="Video">Video</label><input type="number" id="Video" placeholder="Video">
-                                <button class="neon-btn" onclick="addSale()">Add Sale</button>
-                    </div>
-                    <div class="sales-list" id="salesList">
-                        <h4>Sales History</h4>
-                        <ul id="salesItems"></ul>
-                    </div>
-                    <div class="sales-total">
-                        <div class="total-sales">Total Sales: <span id="totalSales">0</span></div>
-                            </div>
-                    </div>
                 </div>
-            </div>
 
-            <div class="summary-box" id="summaryBox">
-                    
-                <div class="summary-content">
-                <h3>Summary</h3>
-                        <div class="summary-item">CPC: <span id="summaryCPC"></span></div>
-                        <div class="summary-item">Preferred Contact: <span id="summaryPreferredContact"></span></div>
-                    <div class="summary-item">Total Break Time: <span id="summaryBreak">00:00</span></div>
-                    <div class="summary-item">Total Sales: <span id="summarySales">0</span></div>
-                        <div class="summary-item">Checked Call Steps: <span id="checkedSteps"></span></div>
-                        <div class="summary-item">Latest Call Details: <span id="summaryCallDetails"></span></div>
-                    <div class="summary-item manager-summary" style="display: none;">
-                        <h4>Manager Summary</h4>
-                        <div class="manager-details">
-                            <div class="manager-item">HR Time: <span id="summaryHr">00:00</span></div>
-                            <div class="manager-item">Supervisor Time: <span id="summarySupervisor">00:00</span></div>
-                            <div class="manager-item">Audit Time: <span id="summaryAudit">00:00</span></div>
+                <!-- Call Status Card -->
+                <div class="call-status-section" id="callStatusSection" style="background: transparent; border: 2px solid #bdbdfc; border-radius: 10px; padding: 18px 20px; margin: 18px 0; box-shadow: 0 2px 8px rgba(3,5,91,0.07); max-width: 400px;">
+                    <h3 style="color: #3a3a7c; margin-bottom: 16px;">Call Status</h3>
+                    <div style="display: flex; flex-direction: column; gap: 14px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span style="min-width: 120px; color: #2ecc40; font-weight: 600;">Good Call</span>
+                            <label style="color: #2ecc40; font-weight: 500;"><input type="checkbox" class="call-status-checkbox" id="goodCallYes" value="Yes"> Yes</label>
+                            <label style="color: #ff4136; font-weight: 500;"><input type="checkbox" class="call-status-checkbox" id="goodCallNo" value="No"> No</label>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span style="min-width: 120px; color: #0074d9; font-weight: 600;">Issue Resolved</span>
+                            <label style="color: #0074d9; font-weight: 500;"><input type="checkbox" class="call-status-checkbox" id="issueResolvedYes" value="Yes"> Yes</label>
+                            <label style="color: #ff4136; font-weight: 500;"><input type="checkbox" class="call-status-checkbox" id="issueResolvedNo" value="No"> No</label>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span style="min-width: 120px; color: #ff851b; font-weight: 600;">Survey Pitch</span>
+                            <label style="color: #ff851b; font-weight: 500;"><input type="checkbox" class="call-status-checkbox" id="surveyPitchYes" value="Yes"> Yes</label>
+                            <label style="color: #ff4136; font-weight: 500;"><input type="checkbox" class="call-status-checkbox" id="surveyPitchNo" value="No"> No</label>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span style="min-width: 120px; color: #b10dc9; font-weight: 600;">Promoter Call</span>
+                            <label style="color: #b10dc9; font-weight: 500;"><input type="checkbox" class="call-status-checkbox" id="promoterCallYes" value="Yes"> Yes</label>
+                            <label style="color: #ff4136; font-weight: 500;"><input type="checkbox" class="call-status-checkbox" id="promoterCallNo" value="No"> No</label>
                         </div>
                     </div>
-                    <button class="neon-btn" onclick="sendEmail()">Send Summary to Email</button>
                 </div>
-            </div>
+
+                <div class="sales-tracking" id="salesTracking">
+                    <h3>Sales Tracking</h3>
+                    <div class="sales-inputs">
+                                <div class="sales-inputs-row">
+                                    <label for="Fiber">Fiber</label><input type="number" id="Fiber" placeholder="Fiber">
+                                    <label for="Mobile">Mobile</label><input type="number" id="Mobile" placeholder="Mobile">
+                                    <label for="Video">Video</label><input type="number" id="Video" placeholder="Video">
+                                    <button class="neon-btn" onclick="addSale()">Add Sale</button>
+                        </div>
+                        <div class="sales-list" id="salesList">
+                            <h4>Sales History</h4>
+                            <ul id="salesItems"></ul>
+                        </div>
+                        <div class="sales-total">
+                            <div class="total-sales">Total Sales: <span id="totalSales">0</span></div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="summary-box" id="summaryBox">
+                    
+                    <div class="summary-content">
+                    <h3>Summary</h3>
+                            <div class="summary-item">CPC: <span id="summaryCPC"></span></div>
+                            <div class="summary-item">Preferred Contact: <span id="summaryPreferredContact"></span></div>
+                        <div class="summary-item">Total Break Time: <span id="summaryBreak">00:00</span></div>
+                        <div class="summary-item">Total Sales: <span id="summarySales">0</span></div>
+                            <div class="summary-item">Checked Call Steps: <span id="checkedSteps"></span></div>
+                            <div class="summary-item">Latest Call Details: <span id="summaryCallDetails"></span></div>
+                        <div class="summary-item manager-summary" style="display: none;">
+                            <h4>Manager Summary</h4>
+                            <div class="manager-details">
+                                <div class="manager-item">HR Time: <span id="summaryHr">00:00</span></div>
+                                <div class="manager-item">Supervisor Time: <span id="summarySupervisor">00:00</span></div>
+                                <div class="manager-item">Audit Time: <span id="summaryAudit">00:00</span></div>
+                            </div>
+                        </div>
+                        <button class="neon-btn" onclick="sendEmail()">Send Summary to Email</button>
+                    </div>
+                </div>
 
                 <div class="call-summary-table-section" id="callSummaryTableSection">
                     <h3>Call Summary Table</h3>
@@ -223,12 +250,19 @@
                                 <th>Sales (F/M/V)</th>
                                 <th>CPC</th>
                                 <th>Call Steps</th>
+                                <th>Good Call</th>
+                                <th>Issue Resolved</th>
+                                <th>Survey Pitch</th>
+                                <th>Promoter Call</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Call Duration</th>
                             </tr>
                         </thead>
                         <tbody id="callSummaryTableBody"></tbody>
                     </table>
-                        </div>
-                    </div>
+                </div>
+            </div>
             <div class="daily-update-box" id="dailyUpdateBox">
                 <h3>Daily Update</h3>
                 <div class="update-table">
