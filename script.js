@@ -32,6 +32,8 @@ let sales = [
 // --- Call Tracking Logic ---
 let currentCall = null;
 let callHistory = [];
+let callStartTime = null;
+let callEndTime = null;
 
 // APM (Manager) to Employee mapping
 const apmEmployeeMap = {
@@ -461,6 +463,15 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Update session status periodically
     setInterval(updateSessionStatus, 60000); // Update every minute
+
+    const callStatusSection = document.getElementById('callStatusSection');
+    if (callStatusSection) {
+        if (currentRole === 'employee') {
+            callStatusSection.style.display = 'block';
+        } else {
+            callStatusSection.style.display = 'none';
+        }
+    }
 });
 
 // Password visibility toggle function (backup method)
@@ -1179,11 +1190,19 @@ function startCall() {
         id: Date.now(),
         sequenceId,
         dxstNumber: '', // Will be set before ending call
-        sales: { Fiber: 0, Mobile: 0, Video: 0 },
+        sales: { Fiber: sales.find(s => s.type === 'Fiber').count, Mobile: sales.find(s => s.type === 'Mobile').count, Video: sales.find(s => s.type === 'Video').count },
         cpc: '',
         callSteps: [],
-        preferredContact: []
+        preferredContact: [],
+        goodCall: '',
+        issueResolved: '',
+        surveyPitch: '',
+        promoterCall: '',
+        startTime: new Date().toISOString(),
+        endTime: '',
+        duration: 0
     };
+    callStartTime = new Date();
     
     // Clear sequence ID input after starting call
     document.getElementById('sequenceId').value = '';
@@ -1263,6 +1282,22 @@ function endCall() {
     updateCallSummary();
     
     alert('Call ended and saved to history!');
+    callEndTime = new Date();
+    if (currentCall && callStartTime) {
+        currentCall.endTime = callEndTime.toISOString();
+        currentCall.duration = Math.floor((callEndTime - new Date(currentCall.startTime)) / 1000);
+    }
+    // Get Call Status values
+    currentCall.goodCall = document.getElementById('goodCallYes').checked ? 'Yes' : (document.getElementById('goodCallNo').checked ? 'No' : '');
+    currentCall.issueResolved = document.getElementById('issueResolvedYes').checked ? 'Yes' : (document.getElementById('issueResolvedNo').checked ? 'No' : '');
+    currentCall.surveyPitch = document.getElementById('surveyPitchYes').checked ? 'Yes' : (document.getElementById('surveyPitchNo').checked ? 'No' : '');
+    currentCall.promoterCall = document.getElementById('promoterCallYes').checked ? 'Yes' : (document.getElementById('promoterCallNo').checked ? 'No' : '');
+    // Clear Call Status checkboxes
+    [
+      'goodCallYes','goodCallNo','issueResolvedYes','issueResolvedNo','surveyPitchYes','surveyPitchNo','promoterCallYes','promoterCallNo'
+    ].forEach(id => { const el = document.getElementById(id); if (el) el.checked = false; });
+    callStartTime = null;
+    callEndTime = null;
 }
 
 function updateCallSummary() {
@@ -1293,6 +1328,9 @@ function updateCallSummary() {
         const tr = document.createElement('tr');
         tr.style.backgroundColor = 'rgba(255, 160, 122, 0.2)';
         const dxstDisplay = currentCall.dxstNumber || 'Pending DXST';
+        const startTime = currentCall.startTime ? new Date(currentCall.startTime).toLocaleTimeString() : '';
+        const endTime = currentCall.endTime ? new Date(currentCall.endTime).toLocaleTimeString() : '';
+        const duration = currentCall.duration ? formatDuration(currentCall.duration) : '';
         tr.innerHTML = `
             <td>Active</td>
             <td>${currentCall.sequenceId}</td>
@@ -1300,6 +1338,13 @@ function updateCallSummary() {
             <td>${currentCall.sales.Fiber}/${currentCall.sales.Mobile}/${currentCall.sales.Video}</td>
             <td>${currentCall.cpc || 'Pending'}</td>
             <td>${currentCall.callSteps.length} steps</td>
+            <td>${currentCall.goodCall}</td>
+            <td>${currentCall.issueResolved}</td>
+            <td>${currentCall.surveyPitch}</td>
+            <td>${currentCall.promoterCall}</td>
+            <td>${startTime}</td>
+            <td>${endTime}</td>
+            <td>${duration}</td>
         `;
         tbody.appendChild(tr);
     }
@@ -1307,6 +1352,9 @@ function updateCallSummary() {
     // Add completed calls
     callHistory.forEach((call, idx) => {
         const tr = document.createElement('tr');
+        const startTime = call.startTime ? new Date(call.startTime).toLocaleTimeString() : '';
+        const endTime = call.endTime ? new Date(call.endTime).toLocaleTimeString() : '';
+        const duration = call.duration ? formatDuration(call.duration) : '';
         tr.innerHTML = `
             <td>${callHistory.length - idx}</td>
             <td>${call.sequenceId}</td>
@@ -1314,6 +1362,13 @@ function updateCallSummary() {
             <td>${call.sales.Fiber}/${call.sales.Mobile}/${call.sales.Video}</td>
             <td>${call.cpc || 'N/A'}</td>
             <td>${call.callSteps.join(', ')}</td>
+            <td>${call.goodCall}</td>
+            <td>${call.issueResolved}</td>
+            <td>${call.surveyPitch}</td>
+            <td>${call.promoterCall}</td>
+            <td>${startTime}</td>
+            <td>${endTime}</td>
+            <td>${duration}</td>
         `;
         tbody.appendChild(tr);
     });
@@ -1550,7 +1605,7 @@ function updateManagerDashboard() {
             <h4 style="color: #FFD700; margin-bottom: 15px;">Complete Call Summary - All Employees</h4>
             <div style="margin-bottom: 10px;">
                 <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
-                    <button id="manualRefreshBtn" class="neon-btn" style="margin-bottom:10px;">🔄 Refresh Table</button>
+                    <button class="neon-btn" onclick="addTestCall()">Add Test Call</button>
                     <span style="color: #FFA07A; font-size: 12px;">Last updated: ${new Date().toLocaleString()}</span>
                 </div>
                 <div id="comprehensiveCallTable"></div>
@@ -1599,6 +1654,13 @@ function updateManagerDashboard() {
                                             <th style="border: 1px solid #FFA07A; padding: 4px; text-align: center;">Sales (F/M/V)</th>
                                             <th style="border: 1px solid #FFA07A; padding: 4px; text-align: center;">CPC</th>
                                             <th style="border: 1px solid #FFA07A; padding: 4px; text-align: center;">Call Steps</th>
+                                            <th style="border: 1px solid #FFA07A; padding: 4px; text-align: center;">Good Call</th>
+                                            <th style="border: 1px solid #FFA07A; padding: 4px; text-align: center;">Issue Resolved</th>
+                                            <th style="border: 1px solid #FFA07A; padding: 4px; text-align: center;">Survey Pitch</th>
+                                            <th style="border: 1px solid #FFA07A; padding: 4px; text-align: center;">Promoter Call</th>
+                                            <th style="border: 1px solid #FFA07A; padding: 4px; text-align: center;">Start Time</th>
+                                            <th style="border: 1px solid #FFA07A; padding: 4px; text-align: center;">End Time</th>
+                                            <th style="border: 1px solid #FFA07A; padding: 4px; text-align: center;">Duration</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -1610,6 +1672,13 @@ function updateManagerDashboard() {
                                                 <td style="border: 1px solid #FFA07A; padding: 4px; text-align: center;">${call.sales.Fiber}/${call.sales.Mobile}/${call.sales.Video}</td>
                                                 <td style="border: 1px solid #FFA07A; padding: 4px; text-align: center;">${call.cpc || 'N/A'}</td>
                                                 <td style="border: 1px solid #FFA07A; padding: 4px; text-align: center; font-size: 10px;">${call.callSteps.join(', ')}</td>
+                                                <td style="border: 1px solid #FFA07A; padding: 4px; text-align: center;">${call.goodCall}</td>
+                                                <td style="border: 1px solid #FFA07A; padding: 4px; text-align: center;">${call.issueResolved}</td>
+                                                <td style="border: 1px solid #FFA07A; padding: 4px; text-align: center;">${call.surveyPitch}</td>
+                                                <td style="border: 1px solid #FFA07A; padding: 4px; text-align: center;">${call.promoterCall}</td>
+                                                <td style="border: 1px solid #FFA07A; padding: 4px; text-align: center; font-size: 10px;">${call.startTime}</td>
+                                                <td style="border: 1px solid #FFA07A; padding: 4px; text-align: center; font-size: 10px;">${call.endTime}</td>
+                                                <td style="border: 1px solid #FFA07A; padding: 4px; text-align: center; font-size: 10px;">${call.duration}</td>
                                             </tr>
                                         `).join('')}
                                     </tbody>
@@ -1750,31 +1819,71 @@ function refreshCallSummaryTable() {
     const loading = document.getElementById('callSummaryLoading');
     if (loading) loading.style.display = 'block';
     setTimeout(() => {
+        const tbody = document.getElementById('callSummaryTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
         if (currentRole === 'manager') {
-            const tableContainer = document.getElementById('comprehensiveCallTable');
-            if (tableContainer) {
-                const html = generateComprehensiveCallTable();
-                tableContainer.innerHTML = html;
-
-                // Extract current call count from the table
-                const match = html.match(/Total Calls: (\\d+)/);
-                const currentCount = match ? parseInt(match[1], 10) : 0;
-                if (currentCount > lastCallCount) {
-                    alert('New call data received!');
+            // Manager: show all calls for assigned employees
+            const allManagerData = JSON.parse(localStorage.getItem('allManagerData') || '{}');
+            let employeeList = [];
+            try {
+                employeeList = JSON.parse(localStorage.getItem('managerEmployeeList')) || [];
+            } catch (e) {}
+            let allCalls = [];
+            employeeList.forEach(employeeKey => {
+                const data = allManagerData[employeeKey];
+                if (data && data.callHistory && data.callHistory.length > 0) {
+                    data.callHistory.forEach(call => {
+                        allCalls.push({
+                            employeeName: data.employeeName || employeeKey,
+                            ...call
+                        });
+                    });
                 }
-                lastCallCount = currentCount;
+            });
+            allCalls.sort((a, b) => new Date(b.startTime || b.timestamp) - new Date(a.startTime || a.timestamp));
+            allCalls.forEach((call, idx) => {
+                const tr = document.createElement('tr');
+                const startTime = call.startTime ? new Date(call.startTime).toLocaleTimeString() : '';
+                const endTime = call.endTime ? new Date(call.endTime).toLocaleTimeString() : '';
+                const duration = call.duration ? formatDuration(call.duration) : '';
+                tr.innerHTML = `
+                    <td>${allCalls.length - idx}</td>
+                    <td>${call.employeeName}</td>
+                    <td>${call.sequenceId}</td>
+                    <td>${call.dxstNumber || 'N/A'}</td>
+                    <td>${call.sales.Fiber}/${call.sales.Mobile}/${call.sales.Video}</td>
+                    <td>${call.cpc || 'N/A'}</td>
+                    <td>${call.callSteps ? call.callSteps.join(', ') : ''}</td>
+                    <td>${call.goodCall || ''}</td>
+                    <td>${call.issueResolved || ''}</td>
+                    <td>${call.surveyPitch || ''}</td>
+                    <td>${call.promoterCall || ''}</td>
+                    <td>${startTime}</td>
+                    <td>${endTime}</td>
+                    <td>${duration}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            if (allCalls.length === 0) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td colspan="14" style="text-align: center; color: #FFA07A; font-style: italic;">No calls recorded yet. Start a call to see details here.</td>`;
+                tbody.appendChild(tr);
             }
+        } else {
+            // Employee: show only their own calls
+            updateCallSummary();
         }
         if (loading) loading.style.display = 'none';
     }, 300);
 }
 
-// Helper function to format duration
+// Helper function to format duration (seconds to mm:ss)
 function formatDuration(seconds) {
-    if (!seconds) return 'N/A';
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    if (!seconds) return '';
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
 }
 
 // Save daily update from manager (accessible to all employees)
@@ -2763,20 +2872,60 @@ function refreshCallSummaryTable() {
     const loading = document.getElementById('callSummaryLoading');
     if (loading) loading.style.display = 'block';
     setTimeout(() => {
+        const tbody = document.getElementById('callSummaryTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
         if (currentRole === 'manager') {
-            const tableContainer = document.getElementById('comprehensiveCallTable');
-            if (tableContainer) {
-                const html = generateComprehensiveCallTable();
-                tableContainer.innerHTML = html;
-
-                // Extract current call count from the table
-                const match = html.match(/Total Calls: (\\d+)/);
-                const currentCount = match ? parseInt(match[1], 10) : 0;
-                if (currentCount > lastCallCount) {
-                    alert('New call data received!');
+            // Manager: show all calls for assigned employees
+            const allManagerData = JSON.parse(localStorage.getItem('allManagerData') || '{}');
+            let employeeList = [];
+            try {
+                employeeList = JSON.parse(localStorage.getItem('managerEmployeeList')) || [];
+            } catch (e) {}
+            let allCalls = [];
+            employeeList.forEach(employeeKey => {
+                const data = allManagerData[employeeKey];
+                if (data && data.callHistory && data.callHistory.length > 0) {
+                    data.callHistory.forEach(call => {
+                        allCalls.push({
+                            employeeName: data.employeeName || employeeKey,
+                            ...call
+                        });
+                    });
                 }
-                lastCallCount = currentCount;
+            });
+            allCalls.sort((a, b) => new Date(b.startTime || b.timestamp) - new Date(a.startTime || a.timestamp));
+            allCalls.forEach((call, idx) => {
+                const tr = document.createElement('tr');
+                const startTime = call.startTime ? new Date(call.startTime).toLocaleTimeString() : '';
+                const endTime = call.endTime ? new Date(call.endTime).toLocaleTimeString() : '';
+                const duration = call.duration ? formatDuration(call.duration) : '';
+                tr.innerHTML = `
+                    <td>${allCalls.length - idx}</td>
+                    <td>${call.employeeName}</td>
+                    <td>${call.sequenceId}</td>
+                    <td>${call.dxstNumber || 'N/A'}</td>
+                    <td>${call.sales.Fiber}/${call.sales.Mobile}/${call.sales.Video}</td>
+                    <td>${call.cpc || 'N/A'}</td>
+                    <td>${call.callSteps ? call.callSteps.join(', ') : ''}</td>
+                    <td>${call.goodCall || ''}</td>
+                    <td>${call.issueResolved || ''}</td>
+                    <td>${call.surveyPitch || ''}</td>
+                    <td>${call.promoterCall || ''}</td>
+                    <td>${startTime}</td>
+                    <td>${endTime}</td>
+                    <td>${duration}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            if (allCalls.length === 0) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td colspan="14" style="text-align: center; color: #FFA07A; font-style: italic;">No calls recorded yet. Start a call to see details here.</td>`;
+                tbody.appendChild(tr);
             }
+        } else {
+            // Employee: show only their own calls
+            updateCallSummary();
         }
         if (loading) loading.style.display = 'none';
     }, 300);
